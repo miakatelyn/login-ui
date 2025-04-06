@@ -143,7 +143,29 @@
       grid-column-start: 2;
       grid-column-end: 3;
     }
-  </style>
+    @media (max-width: 768px) {
+    #fate .label::before {
+      content: "ЧС";
+    }
+    #fate .label {
+      font-size: 0;
+    }
+
+    #temperament .label::before {
+      content: "Темпер.";
+    }
+    #temperament .label {
+      font-size: 0;
+    }
+
+    #energy .label::before {
+      content: "Энергия";
+    }
+    #energy .label {
+      font-size: 0;
+    }
+  }
+</style>
 </head>
 <body>
   <div class="sphere sphere1"></div>
