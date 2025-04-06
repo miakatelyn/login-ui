@@ -42,7 +42,7 @@
     .glass-card {
       position: relative;
       width: 90vw;
-      max-width: 800px;
+      max-width: 476px;
       aspect-ratio: 4 / 5;
       margin: 60px auto;
       padding: 2vw;
@@ -144,6 +144,9 @@
     }
 
     @media (max-width: 768px) {
+  .glass-card {
+    margin-top: 30px;
+  }
       #fate .label {
         font-size: 0;
         position: relative;
@@ -177,7 +180,7 @@
   <div class="sphere sphere1"></div>
   <div class="sphere sphere2"></div>
   <div class="glass-card">
-    <h2>Рассчитай психоматрицу</h2>
+    <h2>Расчет психоматрицы</h2>
     <p class="description">введите свою дату рождения</p>
     <input type="text" id="birthdate" placeholder="ДД.ММ.ГГГГ">
     <p id="error-message" style="color: red; font-size: 12px; display: none; margin: 5px 0 0;">введите корректную дату</p>
