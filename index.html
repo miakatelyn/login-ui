@@ -152,6 +152,7 @@
     <h2>Рассчитай психоматрицу</h2>
     <p class="description">введите свою дату рождения</p>
     <input type="text" id="birthdate" placeholder="ДД.ММ.ГГГГ">
+    <p id="error-message" style="color: red; font-size: 12px; display: none; margin: 5px 0 0;">введите корректную дату</p>
     <button onclick="calculateMatrix()">Рассчитать</button>
     <div id="matrix">
       <div class="cell wide" id="extra-numbers"><div class="label">Доп. числа</div> <span></span></div>
@@ -174,50 +175,82 @@
   </div>
   <script>
     function calculateMatrix() {
-      const input = document.getElementById('birthdate').value;
-      const digits = input.replace(/\D/g, '').split('').map(Number);
-      if (digits.length < 8) {
-        alert('Введите дату в формате ДД.ММ.ГГГГ');
-        return;
-      }
-      const firstSum = digits.reduce((a, b) => a + b, 0);
-      const secondSum = firstSum.toString().split('').reduce((a, b) => a + +b, 0);
-      let firstDigit = +input[0];
-      if (firstDigit === 0) firstDigit = +input[1];
-      const thirdNumber = firstSum - 2 * firstDigit;
-      const fourthSum = thirdNumber.toString().split('').reduce((a, b) => a + +b, 0);
-      const allNumbers = [...digits, firstSum, secondSum, thirdNumber, fourthSum]
-        .join('').split('').map(Number);
-      const sectors = {
-        '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []
-      };
-      allNumbers.forEach(n => {
-        if (sectors[n]) sectors[n].push(n);
-      });
-      document.querySelector('#extra-numbers span').innerText = `${firstSum}, ${secondSum}, ${thirdNumber}, ${fourthSum}`;
-      const fate = secondSum === 11 ? 11 : secondSum.toString().split('').reduce((a, b) => a + +b, 0);
-      document.querySelector('#fate span').innerText = fate;
-      document.querySelector('#character span').innerText = sectors['1'].join(' ') || '-';
-      document.querySelector('#energy span').innerText = sectors['2'].join(' ') || '-';
-      document.querySelector('#interest span').innerText = sectors['3'].join(' ') || '-';
-      document.querySelector('#health span').innerText = sectors['4'].join(' ') || '-';
-      document.querySelector('#logic span').innerText = sectors['5'].join(' ') || '-';
-      document.querySelector('#work span').innerText = sectors['6'].join(' ') || '-';
-      document.querySelector('#luck span').innerText = sectors['7'].join(' ') || '-';
-      document.querySelector('#duty span').innerText = sectors['8'].join(' ') || '-';
-      document.querySelector('#memory span').innerText = sectors['9'].join(' ') || '-';
-      const temperament = sectors['3'].length + sectors['5'].length + sectors['7'].length;
-      const life = sectors['4'].length + sectors['5'].length + sectors['6'].length;
-      const goal = sectors['1'].length + sectors['4'].length + sectors['7'].length;
-      const family = sectors['2'].length + sectors['5'].length + sectors['8'].length;
-      const habits = sectors['3'].length + sectors['6'].length + sectors['9'].length;
-      document.querySelector('#temperament span').innerText = temperament;
-      document.querySelector('#life span').innerText = life;
-      document.querySelector('#goal span').innerText = goal;
-      document.querySelector('#family span').innerText = family;
-      document.querySelector('#habits span').innerText = habits;
-      document.getElementById('matrix').style.display = 'grid';
-    }
+  const errorMessage = document.getElementById('error-message');
+  errorMessage.style.display = 'none';
+  const input = document.getElementById('birthdate').value;
+
+  const regex = /^\d{2}\.\d{2}\.\d{4}$/;
+  if (!regex.test(input)) {
+    errorMessage.style.display = 'block';
+    return;
+  }
+
+  const [day, month, year] = input.split('.').map(Number);
+
+  const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) ? 29 : 28,
+                       31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  if (
+    isNaN(day) || isNaN(month) || isNaN(year) ||
+    month < 1 || month > 12 ||
+    day < 1 || day > daysInMonth[month - 1]
+  ) {
+    errorMessage.style.display = 'block';
+    return;
+  }
+
+  const digits = input.replace(/\D/g, '').split('').map(Number);
+  const firstSum = digits.reduce((a, b) => a + b, 0);
+  const secondSum = firstSum.toString().split('').reduce((a, b) => a + +b, 0);
+  let firstDigit = +input[0];
+  if (firstDigit === 0) firstDigit = +input[1];
+  const thirdNumber = firstSum - 2 * firstDigit;
+  const fourthSum = thirdNumber.toString().split('').reduce((a, b) => a + +b, 0);
+  const allNumbers = [...digits, firstSum, secondSum, thirdNumber, fourthSum]
+    .join('').split('').map(Number);
+  const sectors = {
+    '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []
+  };
+  allNumbers.forEach(n => {
+    if (sectors[n]) sectors[n].push(n);
+  });
+  document.querySelector('#extra-numbers span').innerText = `${firstSum}, ${secondSum}, ${thirdNumber}, ${fourthSum}`;
+  const fate = secondSum === 11 ? 11 : secondSum.toString().split('').reduce((a, b) => a + +b, 0);
+  document.querySelector('#fate span').innerText = fate;
+  document.querySelector('#character span').innerText = sectors['1'].join(' ') || '-';
+  document.querySelector('#energy span').innerText = sectors['2'].join(' ') || '-';
+  document.querySelector('#interest span').innerText = sectors['3'].join(' ') || '-';
+  document.querySelector('#health span').innerText = sectors['4'].join(' ') || '-';
+  document.querySelector('#logic span').innerText = sectors['5'].join(' ') || '-';
+  document.querySelector('#work span').innerText = sectors['6'].join(' ') || '-';
+  document.querySelector('#luck span').innerText = sectors['7'].join(' ') || '-';
+  document.querySelector('#duty span').innerText = sectors['8'].join(' ') || '-';
+  document.querySelector('#memory span').innerText = sectors['9'].join(' ') || '-';
+  const temperament = sectors['3'].length + sectors['5'].length + sectors['7'].length;
+  const life = sectors['4'].length + sectors['5'].length + sectors['6'].length;
+  const goal = sectors['1'].length + sectors['4'].length + sectors['7'].length;
+  const family = sectors['2'].length + sectors['5'].length + sectors['8'].length;
+  const habits = sectors['3'].length + sectors['6'].length + sectors['9'].length;
+  document.querySelector('#temperament span').innerText = temperament;
+  document.querySelector('#life span').innerText = life;
+  document.querySelector('#goal span').innerText = goal;
+  document.querySelector('#family span').innerText = family;
+  document.querySelector('#habits span').innerText = habits;
+  document.getElementById('matrix').style.display = 'grid';
+}
+    
+document.getElementById('birthdate').addEventListener('input', function (e) {
+  let value = e.target.value.replace(/\D/g, '').slice(0, 8);
+  if (value.length > 4) {
+    value = value.slice(0, 2) + '.' + value.slice(2, 4) + '.' + value.slice(4);
+  } else if (value.length > 2) {
+    value = value.slice(0, 2) + '.' + value.slice(2);
+  }
+  e.target.value = value;
+});
+
   </script>
 </body>
 </html>
+
+
