@@ -148,22 +148,37 @@
       content: "ЧС";
     }
     #fate .label {
-      font-size: 0;
-    }
+  font-size: 0;
+  position: relative;
+}
+#fate .label::after {
+  content: "ЧС";
+  font-size: 14px;
+}
 
     #temperament .label::before {
       content: "Темпер.";
     }
     #temperament .label {
-      font-size: 0;
-    }
+  font-size: 0;
+  position: relative;
+}
+#temperament .label::after {
+  content: "Темпер.";
+  font-size: 14px;
+}
 
     #energy .label::before {
       content: "Энергия";
     }
     #energy .label {
-      font-size: 0;
-    }
+  font-size: 0;
+  position: relative;
+}
+#energy .label::after {
+  content: "Энергия";
+  font-size: 14px;
+}
   }
 </style>
 </head>
